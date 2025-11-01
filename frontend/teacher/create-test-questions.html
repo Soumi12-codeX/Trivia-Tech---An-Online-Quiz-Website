@@ -1,0 +1,31 @@
+<script>
+async function createTest() {
+  const email = localStorage.getItem("teacher_email");
+
+  const title = document.getElementById("testTitle").value;
+  const timeLimit = parseInt(document.getElementById("timeLimit").value);
+
+  const testData = {
+    title,
+    timeLimit,
+    published: false
+  };
+
+  const res = await fetch("http://localhost:8080/api/teacher/create-test", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Email": email
+    },
+    body: JSON.stringify(testData)
+  });
+
+  const result = await res.json();
+  alert(result.message);
+
+  if (res.ok) {
+    window.location.href = "teacher-dashboard.html";
+  }
+}
+</script>
+

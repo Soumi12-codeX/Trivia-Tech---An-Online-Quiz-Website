@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Test - Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <!-- Sidebar content is the same as dashboard -->
+      <div class="sidebar-header"><h2>Teacher Panel</h2></div>
+      <nav class="sidebar-nav">
+        <a href="teacher-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="create-test-details.html" class="active"><i class="fas fa-plus-circle"></i> Create Test</a>
+        <a href="teacher-profile.html"><i class="fas fa-user"></i> My Profile</a>
+      </nav>
+      <div class="sidebar-footer"><button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="page-header">
+        <div>
+          <h1>Create New Test</h1>
+          <p>First, let's set the details for your quiz.</p>
+        </div>
+      </header>
+
+      <div class="form-container">
+        <form id="quiz-details-form">
+          <div class="form-group">
+            <label for="quiz-title">Quiz Title</label>
+            <input type="text" id="quiz-title" class="form-control" placeholder="e.g., Java Basics Quiz" required>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="num-questions">Number of Questions</label>
+              <input type="number" id="num-questions" class="form-control" min="1" max="50" required>
+            </div>
+            <div class="form-group">
+              <label for="marks-per-question">Marks per Question</label>
+              <input type="number" id="marks-per-question" class="form-control" min="1" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="time-limit">Time Limit (in minutes)</label>
+            <input type="number" id="time-limit" class="form-control" min="1" required>
+          </div>
+
+          <div class="form-actions">
+            <a href="teacher-dashboard.html" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Next: Add Questions</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="../auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!isLoggedIn()) {
+        window.location.href = 'teacher-login.html';
+        return;
+      }
+      document.getElementById('quiz-details-form').addEventListener('submit', handleDetailsSubmit);
+    });
+
+    function handleDetailsSubmit(event) {
+      event.preventDefault();
+      
+      // Gather all form data
+      const quizDetails = {
+        title: document.getElementById('quiz-title').value,
+        numberOfQuestions: parseInt(document.getElementById('num-questions').value),
+        marksPerQuestion: parseInt(document.getElementById('marks-per-question').value),
+        timeLimit: parseInt(document.getElementById('time-limit').value)
+      };
+
+      // Save to sessionStorage to pass to the next page
+      sessionStorage.setItem('newQuizDetails', JSON.stringify(quizDetails));
+      
+      // Redirect to the question builder page
+      window.location.href = 'create-test-questions.html';
+    }
+    
+    function handleLogout() {
+      logout();
+    }
+  </script>
+</body>
+</html>

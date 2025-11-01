@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Portal - Trivia Tech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/a2e0e6adad.js" crossorigin="anonymous"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: url('https://www.shutterstock.com/image-vector/synthwave-vaporwave-retrowave-cyber-background-600nw-1457569313.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* ✅ Website Title */
+    .site-title {
+      color: #ffffff;
+      font-size: 48px;
+      font-weight: 900;
+      text-shadow: 0 0 12px rgba(255,255,255,0.7);
+      opacity: 0;
+      transform: translateY(-60px);
+      animation: slideDown 1s ease forwards;
+    }
+
+    /* ✅ Tagline Text */
+    .tagline {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 8px;
+      margin-bottom: 25px;
+      opacity: 0;
+      transform: translateY(-50px);
+      animation: slideDown 1.2s ease forwards;
+      animation-delay: 0.2s;
+      text-shadow: 0 0 10px rgba(255,255,255,0.6);
+    }
+
+    @keyframes slideDown {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ✅ Login Container */
+    .container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      padding: 40px 60px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+
+      opacity: 0;
+      transform: translateY(150px);
+      animation: slideUp 1.2s ease forwards;
+      animation-delay: 0.4s;
+    }
+
+    @keyframes slideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      color: #f7f8fa;
+      font-size: 32px;
+      margin-bottom: 35px;
+      font-weight: 700;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+    }
+
+    .role-options {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .role-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 30px 25px;
+      width: 220px;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+    }
+
+    .role-card:hover {
+      background: #5a00ff;
+      color: white;
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(130, 80, 255, 0.5);
+    }
+
+    .role-card i {
+      font-size: 40px;
+      margin-bottom: 15px;
+      color: #5a00ff;
+    }
+
+    .role-card:hover i {
+      color: white;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    }
+
+    footer span {
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ Animated Heading -->
+  <div class="site-title">Welcome to Trivia Tech</div>
+  <p class="tagline">An Interactive Platform to Challenge Your Tech Knowledge 💡</p>
+
+  <!-- ✅ Sliding Login Container -->
+  <div class="container">
+    <h1><b>Select Login Type</b></h1>
+
+    <div class="role-options">
+      <div class="role-card" onclick="window.location.href='teacher/teacher-login.html'">
+        <i class="fas fa-user-shield"></i>
+        <h3>Administrator Login</h3>
+      </div>
+
+      <div class="role-card" onclick="window.location.href='student/student_login.html'">
+        <i class="fas fa-user-graduate"></i>
+        <h3>Student Login</h3>
+      </div>
+    </div>
+
+    <footer>
+      <p>© 2025 <span>Trivia Tech</span>. All rights reserved.</p>
+    </footer>
+  </div>
+
+</body>
+</html>

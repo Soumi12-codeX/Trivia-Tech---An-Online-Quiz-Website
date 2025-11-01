@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* Layout */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(135deg,#3a0074,#5b00b3,#7a00ff);
+  color: white;
+}
+
+/* Sidebar left full height */
+.sidebar {
+  width: 230px;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255,255,255,0.35);
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header h2 {
+  color: white;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 12px;
+  margin-bottom: 10px;
+  color: white;
+  text-decoration: none;
+  background: rgba(255,255,255,0.10);
+  border-radius: 8px;
+  transition: .2s;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.sidebar-nav a.active,
+.sidebar-nav a:hover {
+  background: white;
+  color: #6d00ff;
+  font-weight: 600;
+}
+
+/* Logout */
+.logout-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 10px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+.logout-btn:hover {
+  background: white;
+  color: #6d00ff;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 40px;
+  position: relative;
+}
+
+/* Welcome on top */
+.page-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.page-header p {
+  opacity: 0.8;
+}
+
+/* Center section for button + note */
+.center-block {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  text-align: center;
+}
+
+/* Button */
+.center-block button {
+  padding: 22px 50px;
+  font-size: 22px;
+  border-radius: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  max-width: 600px;
+  font-weight: 800;
+  box-shadow: 0 0 18px rgba(0,255,0,0.5);
+  transition: .25s;
+}
+.center-block button:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 28px rgba(0,255,0,0.9);
+}
+
+.center-block p {
+  margin-top: 10px;
+  font-size: 16px;
+  opacity: .9;
+}
+
+/* Background shapes */
+.bg-shapes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: 0.22;
+}
+.circle1 { width:130px;height:130px;background:#a855f7;top:8%;left:5%; }
+.circle2 { width:100px;height:100px;background:#9333ea;top:80%;left:28%; }
+.circle3 { width:180px;height:180px;background:#c026d3;top:35%;right:8%; }
+.circle4 { width:90px;height:90px;background:#7c3aed;bottom:12%;right:22%; }
+.icon-shape {
+  position: absolute;
+  font-size:38px;
+  opacity:0.14;
+  filter:blur(4px);
+  color:#ffffff;
+}
+.icon1 { top:14%; left:55%; }
+.icon2 { top:70%; left:75%; font-size:44px; }
+.icon3 { bottom:10%; left:42%; font-size:36px; }
+.icon4 { top:55%; left:12%; font-size:48px; }
+.icon5 { bottom:22%; right:18%; font-size:40px; }
+
+</style>
+</head>
+
+<body>
+
+<div class="bg-shapes">
+  <div class="shape circle1"></div><div class="shape circle2"></div>
+  <div class="shape circle3"></div><div class="shape circle4"></div>
+  <i class="fa-solid fa-microchip icon-shape icon1"></i>
+  <i class="fa-solid fa-bolt icon-shape icon2"></i>
+  <i class="fa-solid fa-laptop-code icon-shape icon3"></i>
+  <i class="fa-solid fa-code icon-shape icon4"></i>
+  <i class="fa-solid fa-trophy icon-shape icon5"></i>
+</div>
+
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header"><h2>Admin Panel</h2></div>
+
+  <nav class="sidebar-nav">
+    <a class="active"><i class="fas fa-home"></i> Home</a>
+    <a href="teacher-results.html"><i class="fas fa-chart-line"></i> View Results</a>
+  </nav>
+
+  <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</aside>
+
+
+<!-- MAIN -->
+<main class="main-content">
+
+  <header class="page-header">
+    <h1>Welcome back, <span id="teacherName">Admin</span> 👋</h1>
+    <p>Overview of student activity & tests.</p>
+  </header>
+
+  <div class="center-block">
+    <button onclick="window.location.href='teacher-results.html'">View Results</button>
+    <p>Click to view submissions, leaderboard & ranking.</p>
+  </div>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("teacherName").innerText =
+    localStorage.getItem("teacher_name") || "Teacher";
+});
+function logout(){ localStorage.clear(); window.location.href="teacher-login.html";}
+</script>
+
+</body>
+</html>

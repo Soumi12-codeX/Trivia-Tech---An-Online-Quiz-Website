@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Login — Intellect Quest</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Inter',sans-serif;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  /* Deep Gamified Violet Background */
+  background: radial-gradient(circle at top right, #8d00ff 0%, #4b0099 40%, #210046 100%);
+  overflow:hidden;
+  color:white;
+}
+
+/* Floating blurry shapes */
+.bg-shapes{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+}
+
+.shape{
+  position:absolute;
+  border-radius:50%;
+  opacity:0.28;
+  filter:blur(22px);
+}
+
+.circle1{width:160px;height:160px;background:#a855f7;top:10%;left:5%;}
+.circle2{width:120px;height:120px;background:#9333ea;top:75%;left:20%;}
+.circle3{width:190px;height:190px;background:#c026d3;top:40%;right:8%;}
+.circle4{width:110px;height:110px;background:#7c3aed;bottom:15%;right:30%;}
+
+/* Floating icons */
+.icon{
+  position:absolute;
+  opacity:0.22;
+  filter:blur(2px);
+  color:white;
+}
+.icon1{top:15%;left:50%;font-size:42px;}
+.icon2{top:70%;left:75%;font-size:48px;}
+.icon3{bottom:12%;left:42%;font-size:38px;}
+.icon4{top:55%;left:12%;font-size:46px;}
+.icon5{bottom:22%;right:17%;font-size:42px;}
+
+/* Login Container */
+.login-container{
+  z-index:2;
+  width:380px;
+  padding:40px 30px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(12px);
+  border:1.5px solid rgba(255,255,255,0.5);
+  border-radius:14px;
+  box-shadow:0 0 25px rgba(255,255,255,0.18);
+  text-align:center;
+}
+
+.form-header h2{
+  font-size:28px;
+  font-weight:800;
+  margin-bottom:5px;
+  text-shadow:0 0 6px rgba(255,255,255,0.9);
+}
+.form-header p{font-size:14px;opacity:0.9;margin-bottom:25px;}
+
+.input-group{
+  display:flex;
+  align-items:center;
+  background:rgba(255,255,255,0.08);
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:10px;
+  margin-bottom:15px;
+}
+.input-group i{margin-right:10px;color:white;font-size:16px;}
+.input-group input{
+  border:none;
+  outline:none;
+  background:transparent;
+  color:white;
+  width:100%;
+  font-size:15px;
+}
+input::placeholder{color:#ddd;}
+
+/* Buttons */
+button{
+  background:linear-gradient(90deg,#ff00dd,#ff6bf7);
+  border:none;color:white;
+  padding:14px 0;
+  font-size:17px;
+  border-radius:10px;
+  cursor:pointer;
+  width:100%;
+  margin-top:10px;
+  font-weight:700;
+  box-shadow:0 0 22px rgba(255,0,200,0.6);
+  transition:.3s;
+}
+button:hover{
+  transform:scale(1.06);
+  box-shadow:0 0 36px rgba(255,0,200,1);
+}
+
+.form-switch a{
+  color:#ffd6ff;
+  cursor:pointer;
+  text-decoration:underline;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Floating Background Shapes -->
+<div class="bg-shapes">
+  <div class="shape circle1"></div>
+  <div class="shape circle2"></div>
+  <div class="shape circle3"></div>
+  <div class="shape circle4"></div>
+
+  <i class="fa-solid fa-microchip icon icon1"></i>
+  <i class="fa-solid fa-graduation-cap icon icon2"></i>
+  <i class="fa-solid fa-code icon icon3"></i>
+  <i class="fa-solid fa-book icon icon4"></i>
+  <i class="fa-solid fa-chalkboard-teacher icon icon5"></i>
+</div>
+
+<!-- Login Box -->
+<div class="login-container">
+  <div id="login-form" class="form-container">
+    <div class="form-header">
+      <h2>Admin Login</h2>
+      <p>Access your portal</p>
+    </div>
+
+    <form id="loginFormElement">
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="login-email" placeholder="Email Address" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="login-password" placeholder="Password" required>
+      </div>
+      <button type="submit">Login</button>
+    </form>
+
+    
+  </div>
+</div>
+
+<script src="../auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (isLoggedIn()) window.location.href = 'teacher-dashboard.html';
+
+  document.getElementById('loginFormElement').addEventListener('submit', handleLogin);
+});
+
+async function handleLogin(event){
+  event.preventDefault();
+  const email=document.getElementById('login-email').value;
+  const password=document.getElementById('login-password').value;
+
+  try{
+    const res=await fetch('http://localhost:8080/api/auth/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
+    });
+
+    const result=await res.json();
+    if(res.ok){
+      localStorage.setItem("mcq_portal_auth_token",result.token);
+      localStorage.setItem("mcq_portal_user_role",result.role);
+      localStorage.setItem("teacher_email",email);
+      localStorage.setItem("teacher_name",result.name);
+      window.location.href="teacher-dashboard.html";
+    } else alert(result.message||"Login failed");
+  }catch(err){
+    alert("Server error");
+  }
+}
+
+function toggleForms(){ alert("Registration will be available soon ✅"); }
+</script>
+
+</body>
+</html>

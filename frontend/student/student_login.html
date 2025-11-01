@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2e0e6adad.js" crossorigin="anonymous"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body {
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80')
+        no-repeat center center fixed;
+      background-size: cover;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; padding: 20px;
+    }
+
+    .container {
+      width: 420px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(15px);
+      padding: 40px 35px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      transition: .3s;
+    }
+
+    h2 { text-align: center; margin-bottom: 15px; color: #222; font-size: 26px; }
+
+    .form-group { position: relative; margin-bottom: 18px; }
+    .form-group i { position: absolute; left: 12px; top: 12px; color: #666; }
+    input { width: 100%; padding: 12px 40px; border-radius: 8px; border: 1px solid #ccc; }
+
+    button {
+      width: 100%; background: #4f46e5; color: #fff; padding: 12px;
+      border-radius: 8px; cursor: pointer; border: none; font-size: 16px;
+    }
+
+    .switch-text { text-align: center; margin-top: 10px; font-size: 14px; }
+    .switch-text a { color: #4338ca; font-weight: bold; cursor: pointer; }
+
+    #registerForm { display: none; }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- ✅ Login Form -->
+  <div id="loginForm">
+    <h2>Student Login</h2>
+    <form id="studentLoginForm">
+      <div class="form-group">
+        <i class="fas fa-id-badge"></i>
+        <input id="login-roll" type="text" placeholder="Email" required>
+      </div>
+
+      <div class="form-group">
+        <i class="fas fa-lock"></i>
+        <input id="login-password" type="password" placeholder="Password" required>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="switch-text">Don't have an account? 
+      <a onclick="toggleForm('register')">Register here</a>
+    </p>
+  </div>
+
+  <!-- ✅ Registration Form -->
+  <div id="registerForm">
+    <h2>Student Register</h2>
+    <form id="studentRegisterForm">
+
+      <div class="form-group">
+        <i class="fas fa-user"></i>
+        <input id="reg-name" type="text" placeholder="Full Name" required>
+      </div>
+
+      <div class="form-group">
+        <i class="fas fa-id-badge"></i>
+        <input id="reg-roll" type="text" placeholder="Roll Number (email format)" required>
+      </div>
+
+      <div class="form-group">
+        <i class="fas fa-lock"></i>
+        <input id="reg-password" type="password" placeholder="Password" required>
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p class="switch-text">Already have an account? 
+      <a onclick="toggleForm('login')">Login here</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+function toggleForm(type) {
+  document.getElementById("loginForm").style.display = type === "login" ? "block" : "none";
+  document.getElementById("registerForm").style.display = type === "register" ? "block" : "none";
+}
+
+// ✅ Student Login Handler
+document.getElementById("studentLoginForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const email = document.getElementById("login-roll").value;
+  const password = document.getElementById("login-password").value;
+
+  const res = await fetch("http://localhost:8080/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+  if(!res.ok) return alert(data.message || "Login failed");
+
+  localStorage.setItem("student_token", data.token);
+  localStorage.setItem("student_email", email);
+  localStorage.setItem("student_name", data.name);
+  localStorage.setItem("student_role", data.role);
+
+  window.location.href = "student_main.html";
+});
+
+// ✅ Student Register Handler
+document.getElementById("studentRegisterForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("reg-name").value;
+  const email = document.getElementById("reg-roll").value;
+  const password = document.getElementById("reg-password").value;
+
+  const res = await fetch("http://localhost:8080/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password, role: "STUDENT" })
+  });
+
+  const data = await res.json();
+  if(!res.ok) return alert(data.message || "Registration failed");
+
+  alert("Registration successful! Login now.");
+  toggleForm("login");
+});
+</script>
+
+</body>
+</html>

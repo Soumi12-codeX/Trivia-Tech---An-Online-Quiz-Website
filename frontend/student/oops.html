@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Quiz System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(rgba(10, 20, 70, 0.85), rgba(0, 0, 30, 0.85)),
+        url('https://images.unsplash.com/photo-1596495577886-d920f1fb7238?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      background-attachment: fixed;
+    }
+    header {
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 25px 0;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      background-color: #1a73e8;
+      width: 100vw;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    main {
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      padding: 0;
+      color: white;
+      animation: fadeInUp 0.8s ease-out;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #welcome-screen {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      color: #333;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    #welcome-screen h2 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #1a73e8;
+      margin-bottom: 10px;
+    }
+    #welcome-screen p {
+      font-size: 18px;
+      color: #5f6368;
+      margin-bottom: 30px;
+    }
+    .quiz-details {
+      background-color: #f7f7f7;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: left;
+      width: 80%;
+      max-width: 400px;
+    }
+    .quiz-details h3 {
+      font-size: 20px;
+      color: #1a73e8;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    .quiz-details ul {
+      list-style: none;
+      padding: 0;
+    }
+    .quiz-details ul li {
+      font-size: 16px;
+      color: #3c4043;
+      padding: 5px 0;
+      border-bottom: 1px dashed #e8e8e8;
+    }
+    .quiz-details ul li:last-child {
+      border-bottom: none;
+    }
+    #start-quiz-btn {
+      padding: 12px 30px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    #start-quiz-btn:hover {
+      background-color: #1765c9;
+    }
+    #quiz-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 40px;
+      display: none;
+    }
+    #timer {
+      font-size: 16px;
+      color: #ffd2d2;
+      font-weight: 600;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .progress-bar {
+      width: 100%;
+      background-color: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      height: 10px;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 10px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #22d3ee, #a78bfa);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #e0e7ff;
+    }
+    .question-text {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 25px;
+      color: #f1f5f9;
+      line-height: 1.5;
+    }
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .option-btn {
+      padding: 14px 12px;
+      background-color: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: left;
+      font-weight: 500;
+      color: #f9fafb;
+      transition: all 0.25s;
+      backdrop-filter: blur(4px);
+    }
+    .option-btn:hover {
+      background-color: rgba(59,130,246,0.45);
+      transform: scale(1.03);
+      box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+    }
+    .option-btn.selected {
+      background: linear-gradient(90deg, #22d3ee, #6366f1);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.5);
+      transform: scale(1.04);
+    }
+    .navigation {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 40px;
+      align-items: center;
+    }
+    .nav-btn {
+      padding: 12px 25px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      margin-right: 15px;
+    }
+    .nav-btn:hover {
+      background: linear-gradient(90deg, #1e40af, #6d28d9);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(99,102,241,0.4);
+    }
+    #result {
+      display: none;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 30px;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    #score {
+      font-size: 30px;
+      font-weight: 700;
+      color: #34d399;
+      margin-bottom: 10px;
+    }
+    #remark {
+      font-size: 18px;
+      color: #fef3c7;
+      margin-bottom: 20px;
+    }
+    #chart-container {
+      width: 100%;
+      max-width: 250px;
+      margin: 20px auto 30px auto;
+      background: transparent;
+    }
+    #restart-btn, #logout-btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      margin: 10px;
+    }
+    #restart-btn {
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      color: white;
+    }
+    #restart-btn:hover {
+      background: linear-gradient(90deg, #15803d, #16a34a);
+      transform: translateY(-3px);
+    }
+    #logout-btn {
+      background: linear-gradient(90deg, #ef4444, #dc2626);
+      color: white;
+    }
+    #logout-btn:hover {
+      background: linear-gradient(90deg, #b91c1c, #dc2626);
+      transform: translateY(-3px);
+    }
+    footer {
+      text-align: center;
+      color: #dbeafe;
+      font-size: 14px;
+      margin-top: 25px;
+      opacity: 0.8;
+      width: 100%;
+      padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header><b>Intellect Quest</b></header>
+  <main>
+    <div id="welcome-screen">
+      <h2>Welcome to the Quiz!</h2>
+      <p>Attempt the quiz and strengthen your fundamentals!</p>
+      <div class="quiz-details">
+        <h3>Quiz Details:</h3>
+        <ul>
+          <li><strong>Total Questions:</strong> 25</li>
+          <li><strong>Time:</strong> 30:00</li>
+          <li><strong>Scoring:</strong> 1 point per correct answer</li>
+        </ul>
+      </div>
+      <button id="start-quiz-btn">Start Quiz</button>
+    </div>
+
+    <div id="quiz-card">
+      <div id="timer">Time Left: 30:00</div>
+      <div class="progress-bar"><div class="progress" id="quizProgress"></div></div>
+      <div id="quiz-container"></div>
+      <div class="navigation">
+        <button class="nav-btn" id="prevBtn" style="display:none;">Previous</button>
+        <button class="nav-btn" id="nextBtn" style="display:inline-block;">Next</button>
+        <button class="nav-btn" id="submitBtn" style="display:none;">Submit</button>
+      </div>
+      <div id="result">
+        <div id="chart-container">
+          <canvas id="scoreDonutChart"></canvas>
+        </div>
+        <div id="score"></div>
+        <p id="remark"></p>
+        <button id="restart-btn">Restart Quiz</button>
+        <button id="logout-btn">Logout</button>
+      </div>
+    </div>
+  </main>
+  <footer>© 2025 Online Quiz System | All Rights Reserved</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  const questions = [
+    { question: "Which of the following is not a pillar of OOP?", options: ["Inheritance", "Polymorphism", "Compilation", "Abstraction"], answer: "C" },
+    { question: "Which concept allows a single function to have the same name but different behaviors based on its parameters?", options: ["Encapsulation", "Polymorphism", "Inheritance", "Abstraction"], answer: "B" },
+    { question: "What is the primary purpose of a constructor in a class?", options: ["To initialize objects", "To delete objects", "To inherit properties", "To call functions"], answer: "A" },
+    { question: "Which OOP concept involves bundling data and methods that operate on the data into a single unit?", options: ["Encapsulation", "Polymorphism", "Inheritance", "Abstraction"], answer: "A" },
+    { question: "Which of the following is the process of creating a new class from an existing class?", options: ["Inheritance", "Polymorphism", "Abstraction", "Encapsulation"], answer: "A" },
+     { question: "Java is _?", options: ["Compiled", "Interpreted", "Both", "None"], answer: "C" },
+      { question: "OOP stands for?", options: ["Object Oriented Programming", "Oriented Object Program", "Operation Office Program", "None"], answer: "A" },
+      { question: "JVM means?", options: ["Java Virtual Machine", "Java Variable Module", "Joint Virtual Memory", "None"], answer: "A" },
+      { question: "Default value of int?", options: ["0", "null", "1", "undefined"], answer: "A" },
+      { question: "Which keyword creates object?", options: ["create", "new", "make", "init"], answer: "B" },
+      { question: "What is phishing?", options: ["Fake websites", "Network speed", "Encrypting files", "Deleting logs"], answer: "A" },
+      { question: "Firewall is used for?", options: ["Security", "Graphics", "Memory", "Power"], answer: "A" },
+      { question: "Malware stands for?", options: ["Malicious Software", "Multi Software", "Magic Ware", "Machine Alert"], answer: "A" },
+      { question: "Strong password includes?", options: ["UPPER/lower/numbers/symbols", "Only numbers", "Your name", "Simple text"], answer: "A" },
+      { question: "Which protocol encrypts websites?", options: ["HTTP", "HTTPS", "FTP", "IP"], answer: "B" },
+      { question: "Which algorithm is used for line drawing?", options: ["DDA", "Newton", "Prim’s", "Kruskal"], answer: "A" },
+      { question: "FPS means?", options: ["Frames Per Second", "Fast Pixel Scan", "First Pixel Shader", "Frame Pixel Set"], answer: "A" },
+      { question: "RAM used by GPU called?", options: ["VRAM", "SRAM", "DRAM", "PRAM"], answer: "A" },
+      { question: "Basic graphic element is?", options: ["Pixel", "Bit", "Point", "Block"], answer: "A" },
+      { question: "Shading removes?", options: ["Depth", "Intensity", "Noise", "Surface details"], answer: "D" },
+      { question: "What does AI stand for?", options: ["Artificial Information", "Automatic Intelligence", "Artificial Intelligence", "Advanced Interaction"], answer: "C" },
+      { question: "Example of AI?", options: ["Google Assistant", "MS Paint", "Notepad", "Calculator"], answer: "A" },
+      { question: "Most used language for AI?", options: ["Python", "HTML", "CSS", "C"], answer: "A" },
+      { question: "Goal of AI?", options: ["Make machines think like humans", "Store data", "Design hardware", "Speed internet"], answer: "A" },
+      { question: "Which company created ChatGPT?", options: ["Google", "OpenAI", "Amazon", "Microsoft"], answer: "B" }
+  ];
+
+  let currentQuestion = 0, selectedAnswers = {}, time = 1800, timer;
+
+  function startQuiz() {
+    document.getElementById('welcome-screen').style.display = 'none';
+    document.getElementById('quiz-card').style.display = 'block';
+    showQuestion();
+    startTimer();
+    updateProgress();
+  }
+
+  function showQuestion() {
+    const quizContainer = document.getElementById('quiz-container');
+    const q = questions[currentQuestion];
+    quizContainer.innerHTML = `
+      <div class="question-header"><span>Question ${currentQuestion + 1} of ${questions.length}</span></div>
+      <div class="question-text">${q.question}</div>
+      <div class="options">
+        ${q.options.map((opt, i) => {
+          const key = String.fromCharCode(65 + i);
+          const sel = selectedAnswers[currentQuestion] === key ? 'selected' : '';
+          return `<button class="option-btn ${sel}" data-option="${key}">${key}) ${opt}</button>`;
+        }).join('')}
+      </div>`;
+    
+    document.querySelectorAll('.option-btn').forEach(btn =>
+      btn.addEventListener('click', () => selectOption(btn.dataset.option))
+    );
+
+    document.getElementById('prevBtn').style.display = currentQuestion === 0 ? 'none' : 'inline-block';
+    document.getElementById('nextBtn').style.display = currentQuestion === questions.length - 1 ? 'none' : 'inline-block';
+    document.getElementById('submitBtn').style.display = currentQuestion === questions.length - 1 ? 'inline-block' : 'none';
+  }
+
+  function selectOption(opt) {
+    selectedAnswers[currentQuestion] = opt;
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelector(`[data-option="${opt}"]`).classList.add('selected');
+  }
+
+  function nextQuestion() { currentQuestion++; showQuestion(); updateProgress(); }
+  function prevQuestion() { currentQuestion--; showQuestion(); updateProgress(); }
+
+  function updateProgress() {
+    document.getElementById('quizProgress').style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+  }
+
+  function startTimer() {
+    const timerEl = document.getElementById('timer');
+    const updateDisplay = () => {
+      const m = Math.floor(time / 60), s = time % 60;
+      timerEl.textContent = `Time Left: ${m}:${s.toString().padStart(2, '0')}`;
+    };
+    updateDisplay();
+    timer = setInterval(() => time <= 0 ? (clearInterval(timer), submitQuiz()) : (time--, updateDisplay()), 1000);
+  }
+
+  async function submitQuiz() {
+    clearInterval(timer);
+
+    let score = 0;
+    questions.forEach((q, i) => selectedAnswers[i] === q.answer && score++);
+
+    // ✅ Send score to backend
+    try {
+      await fetch("http://localhost:8080/api/student/submit/oops", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentName: localStorage.getItem("student_name"),
+          studentEmail: localStorage.getItem("student_email"),
+          subject: "OOPS",
+          score: score
+        })
+      });
+    } catch (err) {
+      console.log("❗ Error sending score", err);
+    }
+
+    // ✅ UI Score Display
+    document.getElementById('quiz-container').style.display = 'none';
+    document.querySelector('.navigation').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+
+    renderDonutChart(score, questions.length);
+    document.getElementById('score').textContent = `Score: ${score}/${questions.length}`;
+    document.getElementById('remark').textContent =
+      score >= 4 ? "🌟 Excellent Work!" :
+      score >= 2 ? "👍 Good Effort!" :
+      "💪 Keep Practicing!";
+  }
+
+  function renderDonutChart(score, total) {
+    const ctx = document.getElementById('scoreDonutChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: { labels: ['Correct', 'Incorrect'], datasets: [{ data: [score, total-score], backgroundColor: ['#34d399', '#ef4444'] }] },
+      options: { cutout: '70%' }
+    });
+  }
+
+  document.getElementById('start-quiz-btn').onclick = startQuiz;
+  document.getElementById('nextBtn').onclick = nextQuestion;
+  document.getElementById('prevBtn').onclick = prevQuestion;
+  document.getElementById('submitBtn').onclick = submitQuiz;
+  document.getElementById('restart-btn').onclick = () => location.reload();
+  document.getElementById('logout-btn').onclick = () => location.href = "student_main.html";
+</script>
+
+</body>
+</html>
