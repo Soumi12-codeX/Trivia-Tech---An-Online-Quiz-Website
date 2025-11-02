@@ -430,9 +430,11 @@
     renderDonutChart(score, questions.length);
     document.getElementById('score').textContent = `Score: ${score}/${questions.length}`;
     document.getElementById('remark').textContent =
-      score >= 4 ? "🌟 Excellent Work!" :
-      score >= 2 ? "👍 Good Effort!" :
-      "💪 Keep Practicing!";
+      score >= 20 ? "🌟 Excellent Work!" :
+      score >= 18 ? "👍 Good Effort!" :
+      score >=12 ? "🙂 You Can Do Better!" :
+      score <= 5 ? "💪 Keep Practicing!" : "";
+      
   }
 
   function renderDonutChart(score, total) {
